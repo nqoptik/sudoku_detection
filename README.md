@@ -9,12 +9,17 @@ make
 ```
 
 ## Run project
-Copy test data to build folder:
-```
-cp -r ../../computer_vision_basics_data/sudoku_detection/build/* .
-```
-
 Run sudoku detection:
 ```
 ./sudoku_detection <image_file>
 ```
+
+Example:
+```
+./sudoku_detection sample_images/00.jpg
+```
+
+The result will look like this:
+<p align="center">
+    <img src="build/result.jpg" alt="Sudoku">
+</p>
