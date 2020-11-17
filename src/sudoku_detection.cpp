@@ -49,7 +49,7 @@ int main(int argc, char** argv)
     }
 
     cv::Mat gray_image;
-    cv::cvtColor(image, gray_image, CV_BGR2GRAY);
+    cv::cvtColor(image, gray_image, cv::COLOR_BGR2GRAY);
 
     cv::Mat dilate_image;
     cv::dilate(gray_image, dilate_image, cv::Mat(), cv::Point(-1, -1), 1, 1, 1);
@@ -59,13 +59,13 @@ int main(int argc, char** argv)
 
     std::vector<std::vector<cv::Point>> contours;
     std::vector<cv::Vec4i> hierarchy;
-    cv::findContours(edge_dilate_image, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
+    cv::findContours(edge_dilate_image, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
     contours = select_top_contours(contours, 0);
 
     cv::Mat contours_image = cv::Mat::zeros(gray_image.size(), CV_8UC1);
     for (size_t i = 0; i < contours.size(); i++)
     {
-        cv::drawContours(contours_image, contours, i, 255, CV_FILLED);
+        cv::drawContours(contours_image, contours, i, 255, cv::FILLED);
     }
 
     cv::Mat main_image;
@@ -76,7 +76,7 @@ int main(int argc, char** argv)
     cv::dilate(edge_main_image, edge_main_image, cv::Mat(), cv::Point(-1, -1), 1, 1, 1);
     std::vector<std::vector<cv::Point>> contours_2;
     std::vector<cv::Vec4i> hierarchy_2;
-    cv::findContours(edge_main_image, contours_2, hierarchy_2, CV_RETR_TREE, CV_CHAIN_APPROX_NONE);
+    cv::findContours(edge_main_image, contours_2, hierarchy_2, cv::RETR_TREE, cv::CHAIN_APPROX_NONE);
     if (contours_2.size() > 81)
     {
         contours_2 = select_top_contours(contours_2, 81);
