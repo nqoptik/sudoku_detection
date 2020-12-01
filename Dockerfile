@@ -1,4 +1,5 @@
-FROM ubuntu:focal
+# Build stage
+FROM ubuntu:focal AS build
 
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -10,11 +11,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /root/sudoku_detection
 
-COPY build/sample_images build/sample_images
 COPY src src
 COPY CMakeLists.txt .
 
-RUN cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make
+RUN mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make
 
-RUN rm -rf src
-RUN rm CMakeLists.txt
+# Production stage
+FROM ubuntu:focal AS production
+
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libopencv-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /root/sudoku_detection
+
+COPY --from=build /root/sudoku_detection/build build
+
+CMD [ "build/sudoku_detection" ]
